@@ -131,6 +131,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
+    public int getLinkedId(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_USERS, new String[]{COL_LINKED_ID},
+                COL_USERNAME + "=?", new String[]{username}, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int id = cursor.getInt(0);
+            cursor.close();
+            return id;
+        }
+        return -1;
+    }
+
     public boolean usernameExists(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_USERS, new String[]{COL_USER_ID},
@@ -186,6 +198,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(COL_CUSTOMER_NAME, name);
         cv.put(COL_CUSTOMER_SNAME, surname);
+        cv.put(COL_PHONE, phone);
+        cv.put(COL_EMAIL, email);
+        return db.update(TABLE_CUSTOMERS, cv, COL_CUSTOMER_ID + "=?", new String[]{String.valueOf(id)});
+    }
+
+    public int updateCustomerContact(int id, String phone, String email) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
         cv.put(COL_PHONE, phone);
         cv.put(COL_EMAIL, email);
         return db.update(TABLE_CUSTOMERS, cv, COL_CUSTOMER_ID + "=?", new String[]{String.valueOf(id)});

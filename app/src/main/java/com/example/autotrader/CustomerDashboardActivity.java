@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
@@ -14,17 +13,21 @@ import com.google.android.material.button.MaterialButton;
 
 public class CustomerDashboardActivity extends AppCompatActivity {
 
+    DatabaseHelper db;
+    String username;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_customer_dashboard);
 
-        String username = getIntent().getStringExtra("username");
+        db = new DatabaseHelper(this);
+        username = getIntent().getStringExtra("username");
+
         TextView tvWelcome = findViewById(R.id.tvWelcomeCustomer);
         if (tvWelcome != null && username != null) tvWelcome.setText("Welcome, " + username);
 
-        // These are LinearLayouts in the XML not MaterialButtons
         LinearLayout btnViewVehicles  = findViewById(R.id.btnViewVehicles);
         LinearLayout btnViewBookings  = findViewById(R.id.btnViewBookings);
         LinearLayout btnUpdateDetails = findViewById(R.id.btnUpdateDetails);
@@ -32,10 +35,17 @@ public class CustomerDashboardActivity extends AppCompatActivity {
 
         btnViewVehicles.setOnClickListener(v ->
                 startActivity(new Intent(this, ViewBookingsActivity.class)));
+
         btnViewBookings.setOnClickListener(v ->
                 startActivity(new Intent(this, ViewBookingsActivity.class)));
-        btnUpdateDetails.setOnClickListener(v ->
-                Toast.makeText(this, "Update Details - coming soon", Toast.LENGTH_SHORT).show());
+
+        btnUpdateDetails.setOnClickListener(v -> {
+            int linkedId = db.getLinkedId(username);
+            Intent i = new Intent(this, activity_update_details.class);
+            i.putExtra("customerID", linkedId);
+            startActivity(i);
+        });
+
         btnLogout.setOnClickListener(v -> confirmLogout());
     }
 

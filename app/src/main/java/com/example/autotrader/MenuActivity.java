@@ -27,10 +27,10 @@ public class MenuActivity extends AppCompatActivity {
         LinearLayout btnCreateBooking = findViewById(R.id.Button5);
         MaterialButton btnLogout      = findViewById(R.id.btnLogout);
 
-        btnAddCustomer.setOnClickListener(v -> startActivity(new Intent(this, AddCustomerActivity.class)));
+        btnAddCustomer.setOnClickListener(v -> startActivity(new Intent(this, activity_manage_customers.class)));
         btnAddVehicle.setOnClickListener(v -> startActivity(new Intent(this, AddVehicleActivity.class)));
         btnViewBookings.setOnClickListener(v -> startActivity(new Intent(this, ViewBookingsActivity.class)));
-        btnAddMechanic.setOnClickListener(v -> startActivity(new Intent(this, AddMechanicActivity.class)));
+        btnAddMechanic.setOnClickListener(v -> startActivity(new Intent(this, activity_manage_mechanics.class)));
         btnCreateBooking.setOnClickListener(v -> startActivity(new Intent(this, Add_booking.class)));
         btnLogout.setOnClickListener(v -> confirmLogout());
     }

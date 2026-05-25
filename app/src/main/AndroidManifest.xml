@@ -10,6 +10,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AutoTrader">
         <activity
+            android:name=".activity_update_details"
+            android:exported="false" />
+        <activity
+            android:name=".activity_manage_mechanics"
+            android:exported="false" />
+        <activity
+            android:name=".activity_manage_customers"
+            android:exported="false"
+            android:theme="@style/Theme.AutoTrader" />
+        <activity
             android:name=".activity_view_booking"
             android:exported="false"
             android:theme="@style/Theme.AutoTrader" />
