@@ -46,10 +46,10 @@ public class activity_manage_mechanics extends AppCompatActivity {
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                int id       = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_MECHANIC_ID));
-                String name  = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_MECHANIC_NAME));
-                String spec  = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_SPECIALIZATION));
-                int exp      = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_EXPERIENCE));
+                int id      = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_MECHANIC_ID));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_MECHANIC_NAME));
+                String spec = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_SPECIALIZATION));
+                int exp     = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_EXPERIENCE));
 
                 LinearLayout row = new LinearLayout(this);
                 row.setOrientation(LinearLayout.HORIZONTAL);
@@ -103,20 +103,44 @@ public class activity_manage_mechanics extends AppCompatActivity {
                 textBox.addView(tvSpec);
                 textBox.addView(tvExp);
 
-                MaterialButton btnDelete = new MaterialButton(this);
-                btnDelete.setText("Delete");
-                btnDelete.setTextSize(12);
-                btnDelete.setBackgroundColor(0xFFB71C1C);
-                LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(
+                LinearLayout btnCol = new LinearLayout(this);
+                btnCol.setOrientation(LinearLayout.VERTICAL);
+                btnCol.setGravity(Gravity.CENTER);
+                LinearLayout.LayoutParams btnColParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
-                btnParams.setMarginStart(8);
-                btnDelete.setLayoutParams(btnParams);
+                btnColParams.setMarginStart(8);
+                btnCol.setLayoutParams(btnColParams);
+
+                MaterialButton btnEdit = new MaterialButton(this);
+                btnEdit.setText("Edit");
+                btnEdit.setTextSize(11);
+                LinearLayout.LayoutParams editParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                editParams.setMargins(0, 0, 0, 6);
+                btnEdit.setLayoutParams(editParams);
+                btnEdit.setOnClickListener(v -> {
+                    Intent i = new Intent(this, EditMechanicActivity.class);
+                    i.putExtra("mechanicID", id);
+                    i.putExtra("name", name);
+                    i.putExtra("spec", spec);
+                    i.putExtra("exp", exp);
+                    startActivity(i);
+                });
+
+                MaterialButton btnDelete = new MaterialButton(this);
+                btnDelete.setText("Delete");
+                btnDelete.setTextSize(11);
+                btnDelete.setBackgroundColor(0xFFB71C1C);
                 btnDelete.setOnClickListener(v -> confirmDelete(id));
+
+                btnCol.addView(btnEdit);
+                btnCol.addView(btnDelete);
 
                 row.addView(iconBox);
                 row.addView(textBox);
-                row.addView(btnDelete);
+                row.addView(btnCol);
                 mechanicsContainer.addView(row);
 
             } while (cursor.moveToNext());

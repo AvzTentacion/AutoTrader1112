@@ -52,7 +52,6 @@ public class activity_manage_customers extends AppCompatActivity {
                 String phone = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_PHONE));
                 String email = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_EMAIL));
 
-                // Card row
                 LinearLayout row = new LinearLayout(this);
                 row.setOrientation(LinearLayout.HORIZONTAL);
                 row.setGravity(Gravity.CENTER_VERTICAL);
@@ -65,12 +64,10 @@ public class activity_manage_customers extends AppCompatActivity {
                 rowParams.setMargins(0, 0, 0, 16);
                 row.setLayoutParams(rowParams);
 
-                // Icon box
                 LinearLayout iconBox = new LinearLayout(this);
                 iconBox.setBackgroundColor(0xFF6C63FF);
                 iconBox.setGravity(Gravity.CENTER);
-                LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(120, 120);
-                iconBox.setLayoutParams(iconParams);
+                iconBox.setLayoutParams(new LinearLayout.LayoutParams(120, 120));
                 TextView iconText = new TextView(this);
                 iconText.setText(String.valueOf(name.charAt(0)).toUpperCase());
                 iconText.setTextColor(0xFFFFFFFF);
@@ -78,7 +75,6 @@ public class activity_manage_customers extends AppCompatActivity {
                 iconText.setGravity(Gravity.CENTER);
                 iconBox.addView(iconText);
 
-                // Text section
                 LinearLayout textBox = new LinearLayout(this);
                 textBox.setOrientation(LinearLayout.VERTICAL);
                 LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
@@ -108,21 +104,46 @@ public class activity_manage_customers extends AppCompatActivity {
                 textBox.addView(tvPhone);
                 textBox.addView(tvEmail);
 
-                // Delete button
-                MaterialButton btnDelete = new MaterialButton(this);
-                btnDelete.setText("Delete");
-                btnDelete.setTextSize(12);
-                btnDelete.setBackgroundColor(0xFFB71C1C);
-                LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(
+                // Button column
+                LinearLayout btnCol = new LinearLayout(this);
+                btnCol.setOrientation(LinearLayout.VERTICAL);
+                btnCol.setGravity(Gravity.CENTER);
+                LinearLayout.LayoutParams btnColParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
-                btnParams.setMarginStart(8);
-                btnDelete.setLayoutParams(btnParams);
+                btnColParams.setMarginStart(8);
+                btnCol.setLayoutParams(btnColParams);
+
+                MaterialButton btnEdit = new MaterialButton(this);
+                btnEdit.setText("Edit");
+                btnEdit.setTextSize(11);
+                LinearLayout.LayoutParams editParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                editParams.setMargins(0, 0, 0, 6);
+                btnEdit.setLayoutParams(editParams);
+                btnEdit.setOnClickListener(v -> {
+                    Intent i = new Intent(this, EditCustomerActivity.class);
+                    i.putExtra("customerID", id);
+                    i.putExtra("name", name);
+                    i.putExtra("surname", sname);
+                    i.putExtra("phone", phone);
+                    i.putExtra("email", email);
+                    startActivity(i);
+                });
+
+                MaterialButton btnDelete = new MaterialButton(this);
+                btnDelete.setText("Delete");
+                btnDelete.setTextSize(11);
+                btnDelete.setBackgroundColor(0xFFB71C1C);
                 btnDelete.setOnClickListener(v -> confirmDelete(id));
+
+                btnCol.addView(btnEdit);
+                btnCol.addView(btnDelete);
 
                 row.addView(iconBox);
                 row.addView(textBox);
-                row.addView(btnDelete);
+                row.addView(btnCol);
                 customersContainer.addView(row);
 
             } while (cursor.moveToNext());

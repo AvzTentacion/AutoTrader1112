@@ -243,6 +243,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.insert(TABLE_MECHANICS, null, cv);
     }
 
+    public int updateMechanic(int id, String name, String spec, int experience) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_MECHANIC_NAME, name);
+        cv.put(COL_SPECIALIZATION, spec);
+        cv.put(COL_EXPERIENCE, experience);
+        return db.update(TABLE_MECHANICS, cv, COL_MECHANIC_ID + "=?", new String[]{String.valueOf(id)});
+    }
+
     public Cursor getAllMechanics() {
         return this.getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_MECHANICS, null);
     }
@@ -266,10 +275,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return this.getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_BOOKINGS, null);
     }
 
-    public int updateBookingStatus(int id, String status) {
+    public int updateBooking(int id, String serviceType, String date, String status, String mechanic, String vehicle) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
+        cv.put(COL_SERVICE_TYPE, serviceType);
+        cv.put(COL_BOOKING_DATE, date);
         cv.put(COL_STATUS, status);
+        cv.put(COL_ASSIGNED_MECH, mechanic);
+        cv.put(COL_BOOKED_VEHICLE, vehicle);
         return db.update(TABLE_BOOKINGS, cv, COL_BOOKING_ID + "=?", new String[]{String.valueOf(id)});
     }
 
