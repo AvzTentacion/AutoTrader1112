@@ -292,6 +292,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.update(TABLE_BOOKINGS, cv, COL_BOOKING_ID + "=?", new String[]{String.valueOf(id)});
     }
 
+    public int updateBookingStatus(int id, String status) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_STATUS, status);
+        return db.update(TABLE_BOOKINGS, cv, COL_BOOKING_ID + "=?", new String[]{String.valueOf(id)});
+    }
+
     public void deleteBooking(int id) {
         this.getWritableDatabase().delete(TABLE_BOOKINGS, COL_BOOKING_ID + "=?", new String[]{String.valueOf(id)});
     }

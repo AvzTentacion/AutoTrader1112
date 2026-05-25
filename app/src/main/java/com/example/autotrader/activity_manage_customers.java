@@ -123,7 +123,7 @@ public class activity_manage_customers extends AppCompatActivity {
                 editParams.setMargins(0, 0, 0, 6);
                 btnEdit.setLayoutParams(editParams);
                 btnEdit.setOnClickListener(v -> {
-                    Intent i = new Intent(this, EditCustomerActivity.class);
+                    Intent i = new Intent(this, activity_edit_customer.class);
                     i.putExtra("customerID", id);
                     i.putExtra("name", name);
                     i.putExtra("surname", sname);

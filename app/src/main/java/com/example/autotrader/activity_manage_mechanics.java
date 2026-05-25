@@ -121,7 +121,7 @@ public class activity_manage_mechanics extends AppCompatActivity {
                 editParams.setMargins(0, 0, 0, 6);
                 btnEdit.setLayoutParams(editParams);
                 btnEdit.setOnClickListener(v -> {
-                    Intent i = new Intent(this, EditMechanicActivity.class);
+                    Intent i = new Intent(this, activity_edit_mechanic.class);
                     i.putExtra("mechanicID", id);
                     i.putExtra("name", name);
                     i.putExtra("spec", spec);
