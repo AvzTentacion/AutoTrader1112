@@ -33,8 +33,12 @@ public class CustomerDashboardActivity extends AppCompatActivity {
         LinearLayout btnUpdateDetails = findViewById(R.id.btnUpdateDetails);
         MaterialButton btnLogout      = findViewById(R.id.btnLogout);
 
-        btnViewVehicles.setOnClickListener(v ->
-                startActivity(new Intent(this, ViewBookingsActivity.class)));
+        btnViewVehicles.setOnClickListener(v -> {
+            int linkedId = db.getLinkedId(username);
+            Intent i = new Intent(this, activity_view_vehicle.class);
+            i.putExtra("customerID", linkedId);
+            startActivity(i);
+        });
 
         btnViewBookings.setOnClickListener(v ->
                 startActivity(new Intent(this, ViewBookingsActivity.class)));

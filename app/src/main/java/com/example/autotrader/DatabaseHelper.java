@@ -226,6 +226,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.insert(TABLE_VEHICLES, null, cv);
     }
 
+    public Cursor getVehiclesByCustomer(int customerId) {
+        return this.getReadableDatabase().rawQuery(
+                "SELECT * FROM " + TABLE_VEHICLES + " WHERE " + COL_OWNER_ID + "=?",
+                new String[]{String.valueOf(customerId)});
+    }
+
     public Cursor getAllVehicles() {
         return this.getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_VEHICLES, null);
     }
