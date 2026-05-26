@@ -22,13 +22,13 @@ import java.util.List;
 public class activity_edit_booking extends AppCompatActivity {
 
     TextInputEditText etServiceType;
-    Spinner spinnerStatus, spinnerMechanic;
-    MaterialButton btnSave, btnBack, btnPickDate;
     TextView tvSelectedDate;
+    Spinner spinnerStatus, spinnerVehicle, spinnerMechanic;
+    MaterialButton btnSave, btnBack, btnPickDate;
     DatabaseHelper db;
     int bookingId;
-    String selectedDate = "";
-    List<String> mechanicNames = new ArrayList<>();
+    List<String> vehicleList = new ArrayList<>();
+    List<String> mechanicList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,33 +39,27 @@ public class activity_edit_booking extends AppCompatActivity {
         db        = new DatabaseHelper(this);
         bookingId = getIntent().getIntExtra("bookingID", -1);
 
-        etServiceType   = findViewById(R.id.etServiceType);
-        spinnerStatus   = findViewById(R.id.spinnerStatus);
-        spinnerMechanic = findViewById(R.id.spinnerMechanic);
-        btnSave         = findViewById(R.id.btnSaveBooking);
-        btnBack         = findViewById(R.id.btnBack);
-        btnPickDate     = findViewById(R.id.btnPickDate);
-        tvSelectedDate  = findViewById(R.id.tvSelectedDate);
+        etServiceType  = findViewById(R.id.etServiceType);
+        tvSelectedDate = findViewById(R.id.tvSelectedDate);
+        spinnerStatus  = findViewById(R.id.spinnerStatus);
+        spinnerVehicle = findViewById(R.id.spinnerVehicle);
+        spinnerMechanic= findViewById(R.id.spinnerMechanic);
+        btnSave        = findViewById(R.id.btnSaveBooking);
+        btnBack        = findViewById(R.id.btnBack);
+        btnPickDate    = findViewById(R.id.btnPickDate);
 
-        // Set up status spinner
+        // Load statuses
         String[] statuses = {"Pending", "In Progress", "Completed"};
-        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item, statuses);
-        spinnerStatus.setAdapter(statusAdapter);
+        spinnerStatus.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item, statuses));
 
-        // Load mechanics into spinner
-        loadMechanicsIntoSpinner();
+        // Load vehicles and mechanics
+        loadVehicles();
+        loadMechanics();
 
-        // Pre-fill values from intent
+        // Pre-fill values
         etServiceType.setText(getIntent().getStringExtra("serviceType"));
-
-        // Pre-fill date
-        String existingDate = getIntent().getStringExtra("date");
-        if (existingDate != null && !existingDate.isEmpty()) {
-            selectedDate = existingDate;
-            tvSelectedDate.setText("Selected: " + selectedDate);
-            btnPickDate.setText(selectedDate);
-        }
+        tvSelectedDate.setText(getIntent().getStringExtra("date"));
 
         // Pre-select status
         String currentStatus = getIntent().getStringExtra("status");
@@ -78,9 +72,18 @@ public class activity_edit_booking extends AppCompatActivity {
 
         // Pre-select mechanic
         String currentMechanic = getIntent().getStringExtra("mechanic");
-        for (int i = 0; i < mechanicNames.size(); i++) {
-            if (mechanicNames.get(i).contains(currentMechanic)) {
+        for (int i = 0; i < mechanicList.size(); i++) {
+            if (mechanicList.get(i).contains(currentMechanic)) {
                 spinnerMechanic.setSelection(i);
+                break;
+            }
+        }
+
+        // Pre-select vehicle
+        String currentVehicle = getIntent().getStringExtra("vehicle");
+        for (int i = 0; i < vehicleList.size(); i++) {
+            if (vehicleList.get(i).contains(currentVehicle)) {
+                spinnerVehicle.setSelection(i);
                 break;
             }
         }
@@ -88,35 +91,29 @@ public class activity_edit_booking extends AppCompatActivity {
         // Date picker
         btnPickDate.setOnClickListener(v -> {
             Calendar cal = Calendar.getInstance();
-            int year  = cal.get(Calendar.YEAR);
-            int month = cal.get(Calendar.MONTH);
-            int day   = cal.get(Calendar.DAY_OF_MONTH);
-
-            new DatePickerDialog(this, (view, y, m, d) -> {
-                selectedDate = y + "-" + String.format("%02d", m + 1) + "-" + String.format("%02d", d);
-                tvSelectedDate.setText("Selected: " + selectedDate);
-                btnPickDate.setText(selectedDate);
-            }, year, month, day).show();
+            new DatePickerDialog(this, (view, year, month, day) -> {
+                String date = year + "-" + String.format("%02d", month + 1) + "-" + String.format("%02d", day);
+                tvSelectedDate.setText(date);
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
         });
 
         btnBack.setOnClickListener(v -> finish());
 
         btnSave.setOnClickListener(v -> {
-            String type     = etServiceType.getText().toString().trim();
-            String status   = spinnerStatus.getSelectedItem().toString();
-            String mechanic = spinnerMechanic.getSelectedItem().toString();
+            String type    = etServiceType.getText().toString().trim();
+            String date    = tvSelectedDate.getText().toString().trim();
+            String vehicle = spinnerVehicle.getSelectedItem() != null
+                    ? spinnerVehicle.getSelectedItem().toString() : "";
+            String mech    = spinnerMechanic.getSelectedItem() != null
+                    ? spinnerMechanic.getSelectedItem().toString() : "";
+            String status  = spinnerStatus.getSelectedItem().toString();
 
-            if (TextUtils.isEmpty(type)) {
-                etServiceType.setError("Required");
-                etServiceType.requestFocus();
-                return;
-            }
-            if (selectedDate.isEmpty()) {
-                Toast.makeText(this, "Please select a date", Toast.LENGTH_SHORT).show();
-                return;
-            }
+            if (TextUtils.isEmpty(type))                 { Toast.makeText(this, "Enter service type", Toast.LENGTH_SHORT).show(); return; }
+            if (date.equals("No date selected"))         { Toast.makeText(this, "Please select a date", Toast.LENGTH_SHORT).show(); return; }
+            if (vehicle.equals("No vehicles available")) { Toast.makeText(this, "No vehicles available", Toast.LENGTH_SHORT).show(); return; }
+            if (mech.equals("No mechanics available"))   { Toast.makeText(this, "No mechanics available", Toast.LENGTH_SHORT).show(); return; }
 
-            int result = db.updateBooking(bookingId, type, selectedDate, status, mechanic, "");
+            int result = db.updateBooking(bookingId, type, date, status, mech, vehicle);
             if (result > 0) {
                 Toast.makeText(this, "Booking updated!", Toast.LENGTH_SHORT).show();
                 finish();
@@ -126,20 +123,36 @@ public class activity_edit_booking extends AppCompatActivity {
         });
     }
 
-    private void loadMechanicsIntoSpinner() {
-        mechanicNames.clear();
+    private void loadVehicles() {
+        vehicleList.clear();
+        Cursor cursor = db.getAllVehicles();
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                String brand = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_BRAND));
+                String model = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_MODEL));
+                String reg   = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_REG));
+                vehicleList.add(brand + " " + model + " (" + reg + ")");
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        if (vehicleList.isEmpty()) vehicleList.add("No vehicles available");
+        spinnerVehicle.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item, vehicleList));
+    }
 
+    private void loadMechanics() {
+        mechanicList.clear();
         Cursor cursor = db.getAllMechanics();
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_MECHANIC_NAME));
                 String spec = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_SPECIALIZATION));
-                mechanicNames.add(name + " - " + spec);
+                mechanicList.add(name + " (" + spec + ")");
             } while (cursor.moveToNext());
             cursor.close();
         }
-
+        if (mechanicList.isEmpty()) mechanicList.add("No mechanics available");
         spinnerMechanic.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item, mechanicNames));
+                android.R.layout.simple_spinner_dropdown_item, mechanicList));
     }
 }
