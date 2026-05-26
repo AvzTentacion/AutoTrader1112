@@ -40,8 +40,11 @@ public class CustomerDashboardActivity extends AppCompatActivity {
             startActivity(i);
         });
 
-        btnViewBookings.setOnClickListener(v ->
-                startActivity(new Intent(this, ViewBookingsActivity.class)));
+        btnViewBookings.setOnClickListener(v -> {
+            Intent i = new Intent(this, ViewBookingsActivity.class);
+            i.putExtra("role", "customer");
+            startActivity(i);
+        });
 
         btnUpdateDetails.setOnClickListener(v -> {
             int linkedId = db.getLinkedId(username);

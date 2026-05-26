@@ -17,6 +17,7 @@ public class ViewBookingsActivity extends AppCompatActivity {
 
     LinearLayout bookingsContainer;
     DatabaseHelper db;
+    String role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,9 @@ public class ViewBookingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_bookings);
 
         db = new DatabaseHelper(this);
+        role = getIntent().getStringExtra("role");
+        if (role == null) role = "admin";
+
         bookingsContainer = findViewById(R.id.bookingsContainer);
 
         MaterialButton btnBack = findViewById(R.id.btnBack);
@@ -126,51 +130,57 @@ public class ViewBookingsActivity extends AppCompatActivity {
                 textBox.addView(tvMech);
                 textBox.addView(tvVehicle);
 
-                // Button column
-                LinearLayout btnCol = new LinearLayout(this);
-                btnCol.setOrientation(LinearLayout.VERTICAL);
-                btnCol.setGravity(Gravity.CENTER);
-                LinearLayout.LayoutParams btnColParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                btnColParams.setMarginStart(8);
-                btnCol.setLayoutParams(btnColParams);
+                // Button column - only shown for admin and mechanic
+                if (!role.equals("customer")) {
+                    LinearLayout btnCol = new LinearLayout(this);
+                    btnCol.setOrientation(LinearLayout.VERTICAL);
+                    btnCol.setGravity(Gravity.CENTER);
+                    LinearLayout.LayoutParams btnColParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    btnColParams.setMarginStart(8);
+                    btnCol.setLayoutParams(btnColParams);
 
-                MaterialButton btnEdit = new MaterialButton(this);
-                btnEdit.setText("Edit");
-                btnEdit.setTextSize(11);
-                LinearLayout.LayoutParams editParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                editParams.setMargins(0, 0, 0, 6);
-                btnEdit.setLayoutParams(editParams);
-                btnEdit.setOnClickListener(v -> {
-                    Intent i = new Intent(this, activity_edit_booking.class);
-                    i.putExtra("bookingID", id);
-                    i.putExtra("serviceType", type);
-                    i.putExtra("date", date);
-                    i.putExtra("status", status);
-                    i.putExtra("mechanic", mech);
-                    i.putExtra("vehicle", vehicle);
-                    startActivity(i);
-                });
+                    MaterialButton btnEdit = new MaterialButton(this);
+                    btnEdit.setText("Edit");
+                    btnEdit.setTextSize(11);
+                    LinearLayout.LayoutParams editParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    editParams.setMargins(0, 0, 0, 6);
+                    btnEdit.setLayoutParams(editParams);
+                    btnEdit.setOnClickListener(v -> {
+                        Intent i = new Intent(this, activity_edit_booking.class);
+                        i.putExtra("bookingID", id);
+                        i.putExtra("serviceType", type);
+                        i.putExtra("date", date);
+                        i.putExtra("status", status);
+                        i.putExtra("mechanic", mech);
+                        i.putExtra("vehicle", vehicle);
+                        startActivity(i);
+                    });
 
-                MaterialButton btnDelete = new MaterialButton(this);
-                btnDelete.setText("Delete");
-                btnDelete.setTextSize(11);
-                btnDelete.setBackgroundColor(0xFFB71C1C);
-                LinearLayout.LayoutParams deleteParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                btnDelete.setLayoutParams(deleteParams);
-                btnDelete.setOnClickListener(v -> confirmDelete(id));
+                    MaterialButton btnDelete = new MaterialButton(this);
+                    btnDelete.setText("Delete");
+                    btnDelete.setTextSize(11);
+                    btnDelete.setBackgroundColor(0xFFB71C1C);
+                    LinearLayout.LayoutParams deleteParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    btnDelete.setLayoutParams(deleteParams);
+                    btnDelete.setOnClickListener(v -> confirmDelete(id));
 
-                btnCol.addView(btnEdit);
-                btnCol.addView(btnDelete);
+                    btnCol.addView(btnEdit);
+                    btnCol.addView(btnDelete);
 
-                row.addView(iconBox);
-                row.addView(textBox);
-                row.addView(btnCol);
+                    row.addView(iconBox);
+                    row.addView(textBox);
+                    row.addView(btnCol);
+                } else {
+                    row.addView(iconBox);
+                    row.addView(textBox);
+                }
+
                 bookingsContainer.addView(row);
 
             } while (cursor.moveToNext());
