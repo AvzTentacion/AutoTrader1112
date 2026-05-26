@@ -36,18 +36,21 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp"
                 android:layout_marginBottom="16dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="20dp">
 
+                    <!-- Service Type -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -60,7 +63,7 @@
                             android:layout_height="wrap_content"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Date Picker Button -->
+                    <!-- Booking Date Picker -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -69,29 +72,47 @@
                         android:textSize="13sp"
                         android:layout_marginBottom="4dp"/>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnPickDate"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="52dp"
-                        android:text="Select Date"
-                        android:textSize="14sp"
-                        app:strokeColor="#6C63FF"
-                        android:textColor="#6C63FF"
-                        android:layout_marginBottom="16dp"
-                        app:cornerRadius="8dp"
-                        app:icon="@android:drawable/ic_menu_my_calendar"
-                        app:iconTint="#6C63FF"/>
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
 
+                        <TextView
+                            android:id="@+id/tvSelectedDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="No date selected"
+                            android:textSize="15sp"
+                            android:textColor="#212121"
+                            android:padding="8dp"
+                            android:background="@android:drawable/editbox_background"/>
+
+                        <Button
+                            android:id="@+id/btnPickDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pick Date"
+                            android:layout_marginStart="8dp"/>
+                    </LinearLayout>
+
+                    <!-- Mechanic Spinner -->
                     <TextView
-                        android:id="@+id/tvSelectedDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="No date selected"
-                        android:textColor="#888888"
+                        android:text="Select Mechanic"
+                        android:textColor="#666666"
                         android:textSize="13sp"
-                        android:layout_marginBottom="16dp"/>
+                        android:layout_marginBottom="4dp"/>
+                    <Spinner
+                        android:id="@+id/spinnerMechanic"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginBottom="12dp"/>
 
+                    <!-- Service Status Spinner -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -99,27 +120,27 @@
                         android:textColor="#666666"
                         android:textSize="13sp"
                         android:layout_marginBottom="4dp"/>
-
                     <Spinner
                         android:id="@+id/spinnerStatus"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:layout_marginBottom="16dp"/>
+                        android:layout_marginBottom="12dp"/>
 
+                    <!-- Vehicle Spinner -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Assign Mechanic"
+                        android:text="Select Vehicle"
                         android:textColor="#666666"
                         android:textSize="13sp"
                         android:layout_marginBottom="4dp"/>
-
                     <Spinner
-                        android:id="@+id/spinnerMechanic"
+                        android:id="@+id/spinnerVehicle"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginBottom="20dp"/>
 
+                    <!-- Buttons -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
