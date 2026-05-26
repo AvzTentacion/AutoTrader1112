@@ -7,7 +7,7 @@
         android:orientation="vertical" android:padding="24dp" android:gravity="center_horizontal">
         <ImageView android:id="@+id/imageView" android:layout_width="280dp" android:layout_height="140dp"
             android:layout_marginTop="40dp" android:layout_marginBottom="8dp"
-            android:scaleType="fitCenter" app:srcCompat="@drawable/auto"/>
+            android:scaleType="fitCenter" app:srcCompat="@drawable/auto_vertical"/>
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="AutoTrader" android:textSize="28sp" android:textStyle="bold"
             android:textColor="#1A237E" android:layout_marginBottom="4dp"/>
@@ -52,8 +52,5 @@
                 android:layout_height="wrap_content" android:text="Create an account"
                 android:textSize="14sp" android:textStyle="bold" android:textColor="#1565C0" android:padding="4dp"/>
         </LinearLayout>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Default admin: admin / admin123" android:textSize="11sp"
-            android:textColor="#BDBDBD" android:layout_marginBottom="16dp"/>
     </LinearLayout>
 </ScrollView>
