@@ -7,7 +7,7 @@
         android:orientation="vertical" android:padding="24dp" android:gravity="center_horizontal">
         <ImageView android:id="@+id/imageView" android:layout_width="280dp" android:layout_height="140dp"
             android:layout_marginTop="40dp" android:layout_marginBottom="8dp"
-            android:scaleType="fitCenter" app:srcCompat="@drawable/auto_vertical"/>
+            android:scaleType="fitCenter" app:srcCompat="@drawable/auto_enhanced"/>
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="AutoTrader" android:textSize="28sp" android:textStyle="bold"
             android:textColor="#1A237E" android:layout_marginBottom="4dp"/>
